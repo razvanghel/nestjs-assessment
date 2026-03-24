@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>Cocktails List</h1>
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ error }}</div>
+    <div v-if="isPending">Loading...</div>
+    <div v-else-if="isError">
+      {{ error?.message || 'Something went wrong' }}
+    </div>
     <div v-else>
       <label for="search">Search by description:</label>
       <input type="text" id="search" />
@@ -16,35 +18,17 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { useCocktails } from '@/queries/cocktails';
 
 export default {
   name: 'NewCocktail',
   setup() {
-    const data = ref([]);
-    const loading = ref(true);
-    const error = ref(null);
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/cocktails');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonData = await response.json();
-        data.value = jsonData;
-      } catch (err) {
-        error.value = err.message;
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    onMounted(fetchData);
+    const { data, isPending, isError, error } = useCocktails();
 
     return {
       data,
-      loading,
+      isPending,
+      isError,
       error,
     };
   },

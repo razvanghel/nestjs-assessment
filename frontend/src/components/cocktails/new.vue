@@ -3,65 +3,93 @@
     <form @submit.prevent="submitForm">
       <div>
         <label for="title">Title:</label>
-        <input type="text" v-model="form.title" id="title" required />
+        <input
+          id="title"
+          v-model="form.title"
+          type="text"
+          required
+        />
       </div>
+
       <div>
         <label for="price">Price:</label>
-        <input type="number" v-model="form.price" id="price" required />
+        <input
+          id="price"
+          v-model.number="form.price"
+          type="number"
+          required
+        />
       </div>
+
       <div>
         <label for="description">Description:</label>
-        <textarea v-model="form.description" id="description" required></textarea>
+        <textarea
+          id="description"
+          v-model="form.description"
+          required
+        ></textarea>
       </div>
-      <button type="submit">Submit</button>
+
+      <button type="submit" :disabled="mutation.isPending.value">
+        {{ mutation.isPending.value ? 'Submitting...' : 'Submit' }}
+      </button>
+
+      <p v-if="mutation.isError.value">
+        {{ mutation.error.value?.message || 'Something went wrong' }}
+      </p>
+
+      <p v-if="mutation.isSuccess.value">
+        Cocktail created successfully.
+      </p>
     </form>
   </div>
 </template>
 
 <script>
+import { reactive } from 'vue';
+import { useCreateCocktail } from '@/queries/cocktails';
+
 export default {
-  name: 'ListCocktail',
-  data() {
-    return {
-      form: {
-        title: '',
-        price: '',
-        description: '',
-      },
+  name: 'NewCocktail',
+  setup() {
+    const form = reactive({
+      title: '',
+      price: null,
+      description: '',
+    });
+
+    const mutation = useCreateCocktail();
+
+    const resetForm = () => {
+      form.title = '';
+      form.price = null;
+      form.description = '';
     };
-  },
-  methods: {
-    async submitForm() {
+
+    const submitForm = async () => {
       try {
-        const response = await fetch('http://localhost:3000/cocktails', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.form),
+        await mutation.mutateAsync({
+          title: form.title,
+          price: form.price,
+          description: form.description,
         });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        console.log('Form submitted successfully:', data);
-        // Clear the form
-        this.form.title = '';
-        this.form.price = '';
-        this.form.description = '';
+        resetForm();
       } catch (error) {
         console.error('There was an error submitting the form:', error);
-        // Handle the error (e.g., show an error message)
       }
-    },
+    };
+
+    return {
+      form,
+      mutation,
+      submitForm,
+    };
   },
 };
 </script>
 
 <style scoped>
-/* Optional: Add some basic styling */
 form {
   max-width: 400px;
   margin: 0 auto;
@@ -88,5 +116,9 @@ button {
 }
 button:hover {
   background-color: #0056b3;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
