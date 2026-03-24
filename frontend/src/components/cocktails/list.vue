@@ -4,15 +4,14 @@
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else>
-        <label for="search">Search by description:</label>
-       <input type="text" id="search" />
+      <label for="search">Search by description:</label>
+      <input type="text" id="search" />
       <ul>
         <li v-for="item in data" :key="item.id">
-            <span style="font-weight: bold">{{ item.title }}</span> price: {{ item.price }}€
+          <span style="font-weight: bold">{{ item.title }}</span> price: {{ item.price }}€
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 
