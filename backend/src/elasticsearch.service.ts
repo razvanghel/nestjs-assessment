@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-
 import { Client as EsClient } from '@elastic/elasticsearch';
-
 
 @Injectable()
 export class ElasticSearch {
-
   private client: EsClient;
 
-  constructor(
-  ) {
+  constructor() {
     this.client = new EsClient({ node: process.env.ELASTICSEARCH_HOST });
     this.checkConnection();
   }
@@ -23,5 +19,4 @@ export class ElasticSearch {
       console.error('Elasticsearch cluster is down!', error);
     }
   }
-
 }

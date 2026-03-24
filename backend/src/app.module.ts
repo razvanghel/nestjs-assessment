@@ -14,6 +14,6 @@ import { ElasticSearch } from './elasticsearch.service';
     }),
     CocktailsModule,
   ],
-  providers: [ElasticSearch]
+  providers: [ElasticSearch],
 })
 export class AppModule {}

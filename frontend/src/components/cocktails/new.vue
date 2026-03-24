@@ -3,11 +3,11 @@
     <form @submit.prevent="submitForm">
       <div>
         <label for="title">Title:</label>
-        <input type="text" v-model="form.title" id="title" required>
+        <input type="text" v-model="form.title" id="title" required />
       </div>
       <div>
         <label for="price">Price:</label>
-        <input type="number" v-model="form.price" id="price" required>
+        <input type="number" v-model="form.price" id="price" required />
       </div>
       <div>
         <label for="description">Description:</label>
@@ -26,8 +26,8 @@ export default {
       form: {
         title: '',
         price: '',
-        description: ''
-      }
+        description: '',
+      },
     };
   },
   methods: {
@@ -36,9 +36,9 @@ export default {
         const response = await fetch('http://localhost:3000/cocktails', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(this.form)
+          body: JSON.stringify(this.form),
         });
 
         if (!response.ok) {
@@ -55,8 +55,8 @@ export default {
         console.error('There was an error submitting the form:', error);
         // Handle the error (e.g., show an error message)
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -73,7 +73,8 @@ label {
   display: block;
   margin-bottom: 5px;
 }
-input, textarea {
+input,
+textarea {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
