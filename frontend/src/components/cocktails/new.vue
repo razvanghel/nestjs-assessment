@@ -3,31 +3,17 @@
     <form @submit.prevent="submitForm">
       <div>
         <label for="title">Title:</label>
-        <input
-          id="title"
-          v-model="form.title"
-          type="text"
-          required
-        />
+        <input id="title" v-model="form.title" type="text" required />
       </div>
 
       <div>
         <label for="price">Price:</label>
-        <input
-          id="price"
-          v-model.number="form.price"
-          type="number"
-          required
-        />
+        <input id="price" v-model.number="form.price" type="number" required />
       </div>
 
       <div>
         <label for="description">Description:</label>
-        <textarea
-          id="description"
-          v-model="form.description"
-          required
-        ></textarea>
+        <textarea id="description" v-model="form.description" required></textarea>
       </div>
 
       <button type="submit" :disabled="mutation.isPending.value">
@@ -38,9 +24,7 @@
         {{ mutation.error.value?.message || 'Something went wrong' }}
       </p>
 
-      <p v-if="mutation.isSuccess.value">
-        Cocktail created successfully.
-      </p>
+      <p v-if="mutation.isSuccess.value">Cocktail created successfully.</p>
     </form>
   </div>
 </template>

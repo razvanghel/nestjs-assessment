@@ -10,4 +10,3 @@ export function createCocktail(payload) {
     body: JSON.stringify(payload),
   });
 }
-

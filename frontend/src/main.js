@@ -8,7 +8,6 @@ const queryClient = new QueryClient();
 
 const app = createApp(App);
 
-
 app.use(router);
 app.use(VueQueryPlugin, { queryClient });
 
