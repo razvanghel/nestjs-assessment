@@ -21,5 +21,4 @@ export class CocktailsService {
   create(cocktail: Cocktails) {
     return this.usersRepository.insert(cocktail);
   }
-
 }
