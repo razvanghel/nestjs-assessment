@@ -1,4 +1,3 @@
-
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Cocktails } from './cocktails.entity';
 import { CocktailsService } from './cocktails.service';

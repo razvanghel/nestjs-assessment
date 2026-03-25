@@ -16,10 +16,7 @@
         <p class="text-gray-500">Loading cocktails...</p>
       </div>
 
-      <div
-        v-else-if="isError"
-        class="rounded-xl bg-white p-6 text-center text-red-500 shadow"
-      >
+      <div v-else-if="isError" class="rounded-xl bg-white p-6 text-center text-red-500 shadow">
         {{ error?.message || 'Something went wrong' }}
       </div>
 
@@ -40,9 +37,7 @@
             </router-link>
 
             <div class="flex items-center gap-4">
-              <div class="text-lg font-semibold text-green-600">
-                €{{ item.price }}
-              </div>
+              <div class="text-lg font-semibold text-green-600">€{{ item.price }}</div>
 
               <button
                 type="button"

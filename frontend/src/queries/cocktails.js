@@ -5,7 +5,7 @@ import {
   createCocktail,
   getCocktailById,
   updateCocktail,
-  deleteCocktail
+  deleteCocktail,
 } from '@/services/cocktails';
 
 export function useCocktails() {
@@ -47,9 +47,9 @@ export function useUpdateCocktail(id) {
       queryClient.invalidateQueries({ queryKey: ['cocktails'] });
       toast.success('Cocktail updated successfully');
     },
-  }); 
+  });
 }
-    
+
 export function useDeleteCocktail() {
   const queryClient = useQueryClient();
 
@@ -64,4 +64,3 @@ export function useDeleteCocktail() {
     },
   });
 }
-

@@ -8,7 +8,6 @@ import { CocktailTitleAlreadyExistsException } from 'src/common/exceptions/cockt
 import { UpdateCocktailDto } from './dtos/update-cocktail.dto';
 import { CocktailIdInvalid } from 'src/common/exceptions/cocktails/cocktail-invalid-id.exception';
 
-
 @Injectable()
 export class CocktailsService {
   private readonly logger = new Logger(CocktailsService.name);
@@ -66,10 +65,10 @@ export class CocktailsService {
 
     return this.usersRepository.save(updated);
   }
-  
+
   async remove(id: number): Promise<{ message: string }> {
     const cocktailId = Number(id);
-    if(Number.isNaN(cocktailId)){
+    if (Number.isNaN(cocktailId)) {
       throw new CocktailIdInvalid();
     }
     const existing = await this.usersRepository.findOneBy({ id: cocktailId });
