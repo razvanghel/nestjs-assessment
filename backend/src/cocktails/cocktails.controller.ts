@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Cocktails } from './cocktails.entity';
 import { CocktailsService } from './cocktails.service';
 import { Logger } from '@nestjs/common';
+import { CreateCocktailDto } from './dtos/create-cocktail.dto';
 
 @Controller('cocktails')
 export class CocktailsController {
@@ -19,9 +20,9 @@ export class CocktailsController {
   }
 
   @Post()
-  async newCocktail(@Body() cocktail: Cocktails) {
-    this.logger.log('info: creating cocktail', cocktail);
-    const res = await this.cocktailsService.create(cocktail);
+  async newCocktail(@Body() cocktailDto: CreateCocktailDto) {
+    this.logger.log('info: creating cocktail', cocktailDto);
+    const res = await this.cocktailsService.create(cocktailDto);
     this.logger.log(`Cocktail created with id: ${res.id}`);
     return true;
   }
