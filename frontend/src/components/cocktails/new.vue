@@ -8,78 +8,69 @@
 
       <!-- Title -->
       <div>
-  <label class="block text-sm font-medium text-gray-700 mb-1">
-    Title
-  </label>
-  <input
-    v-model="form.title"
-    type="text"
-    class="w-full rounded-lg px-3 py-2 text-sm border
-      focus:outline-none focus:ring-2
-      transition
-      "
-    :class="errors.title
-      ? 'border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:ring-blue-500'"
-  />
-  <p v-if="errors.title" class="text-xs text-red-500 mt-1">
-    {{ errors.title }}
-  </p>
-</div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"> Title </label>
+        <input
+          v-model="form.title"
+          type="text"
+          class="w-full rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2 transition"
+          :class="
+            errors.title
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
+          "
+        />
+        <p v-if="errors.title" class="text-xs text-red-500 mt-1">
+          {{ errors.title }}
+        </p>
+      </div>
 
       <!-- Price -->
       <div>
-  <label class="block text-sm font-medium text-gray-700 mb-1">
-    Price
-  </label>
-  <input
-    v-model.number="form.price"
-    type="number"
-    class="w-full rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2"
-    :class="errors.price
-      ? 'border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:ring-blue-500'"
-  />
-  <p v-if="errors.price" class="text-xs text-red-500 mt-1">
-    {{ errors.price }}
-  </p>
-</div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"> Price </label>
+        <input
+          v-model.number="form.price"
+          type="number"
+          class="w-full rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2"
+          :class="
+            errors.price
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
+          "
+        />
+        <p v-if="errors.price" class="text-xs text-red-500 mt-1">
+          {{ errors.price }}
+        </p>
+      </div>
 
       <!-- Description -->
       <div>
-  <label class="block text-sm font-medium text-gray-700 mb-1">
-    Description
-  </label>
-  <textarea
-    v-model="form.description"
-    rows="3"
-    class="w-full rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2"
-    :class="errors.description
-      ? 'border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:ring-blue-500'"
-  ></textarea>
-  <p v-if="errors.description" class="text-xs text-red-500 mt-1">
-    {{ errors.description }}
-  </p>
-</div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"> Description </label>
+        <textarea
+          v-model="form.description"
+          rows="3"
+          class="w-full rounded-lg px-3 py-2 text-sm border focus:outline-none focus:ring-2"
+          :class="
+            errors.description
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-blue-500'
+          "
+        ></textarea>
+        <p v-if="errors.description" class="text-xs text-red-500 mt-1">
+          {{ errors.description }}
+        </p>
+      </div>
 
       <!-- Button -->
       <button
         type="submit"
         :disabled="isSubmitDisabled"
-        class="w-full py-2 rounded-lg text-sm font-medium text-white transition
-              bg-blue-600 hover:bg-blue-700
-              disabled:bg-blue-300 disabled:hover:bg-blue-300
-              disabled:opacity-100 disabled:cursor-not-allowed"
+        class="w-full py-2 rounded-lg text-sm font-medium text-white transition bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 disabled:hover:bg-blue-300 disabled:opacity-100 disabled:cursor-not-allowed"
       >
         {{ mutation.isPending.value ? 'Submitting...' : 'Submit' }}
       </button>
 
       <!-- Success -->
-      <p
-        v-if="mutation.isSuccess.value"
-        class="text-sm text-green-600 text-center"
-      >
+      <p v-if="mutation.isSuccess.value" class="text-sm text-green-600 text-center">
         Cocktail created successfully.
       </p>
     </form>
@@ -161,31 +152,30 @@ export default {
     };
 
     const submitForm = () => {
-  if (!validateForm()) return;
+      if (!validateForm()) return;
 
-  mutation.mutate(
-    {
-      title: form.title,
-      price: form.price,
-      description: form.description,
-    },
-    {
-      onSuccess: () => {
-        resetForm();
-        mutation.reset();
-      },
-    },
-  );
-};
+      mutation.mutate(
+        {
+          title: form.title,
+          price: form.price,
+          description: form.description,
+        },
+        {
+          onSuccess: () => {
+            resetForm();
+            mutation.reset();
+          },
+        },
+      );
+    };
 
     return {
       form,
       errors,
       mutation,
       submitForm,
-      isSubmitDisabled
+      isSubmitDisabled,
     };
   },
 };
 </script>
-

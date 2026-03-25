@@ -33,11 +33,11 @@ export class CocktailsService {
     const existing = await this.usersRepository.findOne({
       where: { title: dto.title },
     });
-  
+
     if (existing) {
       throw new CocktailTitleAlreadyExistsException(dto.title);
     }
-  
+
     const cocktail = this.usersRepository.create(dto);
     return this.usersRepository.save(cocktail);
   }

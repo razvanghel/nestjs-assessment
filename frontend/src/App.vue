@@ -1,11 +1,6 @@
 <template>
   <div id="app">
-    <Toaster
-  position="top-right"
-  richColors
-  closeButton
-  expand
-/>
+    <Toaster position="top-right" richColors closeButton expand />
     <nav>
       <ul>
         <li><router-link to="/">List</router-link></li>
@@ -21,9 +16,8 @@ import { Toaster } from 'vue-sonner';
 
 export default {
   name: 'App',
-  components:{
-    Toaster
-  }
+  components: {
+    Toaster,
+  },
 };
 </script>
-

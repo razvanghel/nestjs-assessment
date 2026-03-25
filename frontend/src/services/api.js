@@ -1,4 +1,4 @@
-import { AppError } from "@/lib/types/errors";
+import { AppError } from '@/lib/types/errors';
 
 const API_URL = process.env.VUE_APP_API_URL;
 
