@@ -2,6 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cocktails } from './cocktails.entity';
+import { CreateCocktailDto } from './dtos/create-cocktail.dto';
+import { CocktailNotFoundException } from 'src/common/exceptions/cocktails/cocktail-not-found.exception';
+import { CocktailTitleAlreadyExistsException } from 'src/common/exceptions/cocktails/cocktail-name-already-exists.exception';
 
 @Injectable()
 export class CocktailsService {
@@ -16,11 +19,26 @@ export class CocktailsService {
     return this.usersRepository.find();
   }
 
-  findOne(id: number): Promise<Cocktails | null> {
-    return this.usersRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Cocktails | null> {
+    const cocktail = await this.usersRepository.findOneBy({ id });
+
+    if (!cocktail) {
+      throw new CocktailNotFoundException(id);
+    }
+
+    return cocktail;
   }
 
-  async create(cocktail: Cocktails): Promise<Cocktails> {
+  async create(dto: CreateCocktailDto): Promise<Cocktails> {
+    const existing = await this.usersRepository.findOne({
+      where: { title: dto.title },
+    });
+
+    if (existing) {
+      throw new CocktailTitleAlreadyExistsException(dto.title);
+    }
+
+    const cocktail = this.usersRepository.create(dto);
     return this.usersRepository.save(cocktail);
   }
 }
