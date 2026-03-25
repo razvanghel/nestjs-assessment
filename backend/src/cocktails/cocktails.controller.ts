@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Cocktails } from './cocktails.entity';
 import { CocktailsService } from './cocktails.service';
 import { Logger } from '@nestjs/common';
@@ -31,5 +31,10 @@ export class CocktailsController {
   @Put(':id')
   async updateCocktail(@Param('id') id: number, @Body() dto: UpdateCocktailDto) {
     return this.cocktailsService.update(id, dto);
+  }
+  @Delete(':id')
+  async deleteCocktail(@Param('id') id: string) {
+    this.logger.log(`Deleting cocktail with id: ${id}`);
+    return this.cocktailsService.remove(Number(id));
   }
 }
