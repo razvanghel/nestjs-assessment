@@ -4,8 +4,8 @@ import { HttpExceptionFilter } from './common/filters/http-exceptions.filters';
 import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  const logger = new Logger("Bootstrap");
-  
+  const logger = new Logger('Bootstrap');
+
   const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(3000);

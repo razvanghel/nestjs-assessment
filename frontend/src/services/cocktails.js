@@ -10,3 +10,7 @@ export function createCocktail(payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export function getCocktailById(id) {
+  return request(`/cocktails/${id}`);
+}

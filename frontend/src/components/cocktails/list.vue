@@ -10,7 +10,10 @@
       <input type="text" id="search" />
       <ul>
         <li v-for="item in data" :key="item.id">
-          <span style="font-weight: bold">{{ item.title }}</span> price: {{ item.price }}€
+          <router-link :to="`/details/${item.id}`" class="cocktail-link">
+            <span style="font-weight: bold">{{ item.title }}</span>
+            price: {{ item.price }}€
+          </router-link>
         </li>
       </ul>
     </div>
@@ -34,7 +37,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>
