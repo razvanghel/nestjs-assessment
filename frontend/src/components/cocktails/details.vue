@@ -13,7 +13,7 @@
       </div>
 
       <div v-else-if="isError" class="rounded-2xl bg-white p-8 text-center text-red-500 shadow">
-        {{ error?.message || 'Something went wrong' }}
+        {{ error?.message }}
       </div>
 
       <div

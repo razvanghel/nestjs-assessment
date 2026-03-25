@@ -1,5 +1,11 @@
 <template>
   <div id="app">
+    <Toaster
+  position="top-right"
+  richColors
+  closeButton
+  expand
+/>
     <nav>
       <ul>
         <li><router-link to="/">List</router-link></li>
@@ -11,11 +17,13 @@
 </template>
 
 <script>
+import { Toaster } from 'vue-sonner';
+
 export default {
   name: 'App',
+  components:{
+    Toaster
+  }
 };
 </script>
 
-<style>
-/* Add your global styles here */
-</style>
