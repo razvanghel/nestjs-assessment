@@ -1,6 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
 import { toast } from 'vue-sonner';
-import { getCocktails, createCocktail, getCocktailById } from '@/services/cocktails';
+import {
+  getCocktails,
+  createCocktail,
+  getCocktailById,
+  updateCocktail,
+} from '@/services/cocktails';
 
 export function useCocktails() {
   return useQuery({
@@ -28,6 +33,22 @@ export function useCreateCocktail() {
     },
     onError: (error) => {
       toast.error(error?.message);
+    },
+  });
+}
+
+export function useUpdateCocktail(id) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload) => updateCocktail(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cocktail', id] });
+      queryClient.invalidateQueries({ queryKey: ['cocktails'] });
+      toast.success('Cocktail updated successfully');
+    },
+    onError: (error) => {
+      toast.error(error?.message || 'Something went wrong');
     },
   });
 }

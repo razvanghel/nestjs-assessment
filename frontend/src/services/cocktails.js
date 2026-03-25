@@ -14,3 +14,10 @@ export function createCocktail(payload) {
 export function getCocktailById(id) {
   return request(`/cocktails/${id}`);
 }
+
+export function updateCocktail(id, payload) {
+  return request(`/cocktails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+}
