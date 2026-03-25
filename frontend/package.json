@@ -16,7 +16,9 @@
     "@tanstack/vue-query": "^4.43.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue-sonner": "^2.0.9",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
