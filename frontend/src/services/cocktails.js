@@ -21,3 +21,9 @@ export function updateCocktail(id, payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export function deleteCocktail(id) {
+  return request(`/cocktails/${id}`, {
+    method: 'DELETE',
+  });
+}

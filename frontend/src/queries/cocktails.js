@@ -5,6 +5,7 @@ import {
   createCocktail,
   getCocktailById,
   updateCocktail,
+  deleteCocktail
 } from '@/services/cocktails';
 
 export function useCocktails() {
@@ -39,7 +40,6 @@ export function useCreateCocktail() {
 
 export function useUpdateCocktail(id) {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (payload) => updateCocktail(id, payload),
     onSuccess: () => {
@@ -47,8 +47,21 @@ export function useUpdateCocktail(id) {
       queryClient.invalidateQueries({ queryKey: ['cocktails'] });
       toast.success('Cocktail updated successfully');
     },
+  }); 
+}
+    
+export function useDeleteCocktail() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteCocktail,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cocktails'] });
+      toast.success('Cocktail deleted successfully');
+    },
     onError: (error) => {
       toast.error(error?.message || 'Something went wrong');
     },
   });
 }
+
