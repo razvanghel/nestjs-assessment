@@ -17,8 +17,8 @@ const routes = [
   },
   {
     path: '/details/:id',
-    component: CocktailDetails
-  }
+    component: CocktailDetails,
+  },
 ];
 
 const router = createRouter({

@@ -5,7 +5,6 @@ import { Logger } from '@nestjs/common';
 
 @Controller('cocktails')
 export class CocktailsController {
-  
   private readonly logger = new Logger(CocktailsController.name);
   constructor(private readonly cocktailsService: CocktailsService) {}
 
