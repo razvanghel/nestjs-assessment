@@ -6,6 +6,8 @@ import { CreateCocktailDto } from './dtos/create-cocktail.dto';
 import { CocktailNotFoundException } from 'src/common/exceptions/cocktails/cocktail-not-found.exception';
 import { CocktailTitleAlreadyExistsException } from 'src/common/exceptions/cocktails/cocktail-name-already-exists.exception';
 import { UpdateCocktailDto } from './dtos/update-cocktail.dto';
+import { CocktailIdInvalid } from 'src/common/exceptions/cocktails/cocktail-invalid-id.exception';
+
 
 @Injectable()
 export class CocktailsService {
@@ -63,5 +65,23 @@ export class CocktailsService {
     const updated = this.usersRepository.merge(existing, payload);
 
     return this.usersRepository.save(updated);
+  }
+  
+  async remove(id: number): Promise<{ message: string }> {
+    const cocktailId = Number(id);
+    if(Number.isNaN(cocktailId)){
+      throw new CocktailIdInvalid();
+    }
+    const existing = await this.usersRepository.findOneBy({ id: cocktailId });
+
+    if (!existing) {
+      throw new CocktailNotFoundException(cocktailId);
+    }
+
+    await this.usersRepository.remove(existing);
+
+    return {
+      message: 'Cocktail deleted successfully',
+    };
   }
 }
