@@ -45,23 +45,23 @@ export class CocktailsService {
 
   async update(id: number, payload: UpdateCocktailDto) {
     const existing = await this.usersRepository.findOneBy({ id });
-  
+
     if (!existing) {
       throw new CocktailNotFoundException(id);
     }
-  
+
     if (payload.title) {
       const duplicate = await this.usersRepository.findOneBy({
         title: payload.title,
       });
-  
+
       if (duplicate && duplicate.id !== id) {
         throw new CocktailTitleAlreadyExistsException(payload.title);
       }
     }
-  
+
     const updated = this.usersRepository.merge(existing, payload);
-  
+
     return this.usersRepository.save(updated);
   }
 }

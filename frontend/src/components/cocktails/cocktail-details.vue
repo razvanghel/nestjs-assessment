@@ -1,13 +1,9 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-10 px-4">
     <div class="mx-auto max-w-3xl">
-
-      <router-link to="/" class="mb-6 inline-flex text-blue-600">
-        ← Back
-      </router-link>
+      <router-link to="/" class="mb-6 inline-flex text-blue-600"> ← Back </router-link>
 
       <div v-if="cocktail" class="bg-white p-8 rounded-2xl shadow space-y-6">
-
         <EditableField
           label="Title"
           v-model="form.title"
@@ -42,7 +38,6 @@
           @save="submitUpdate"
           @cancel="cancelEdit"
         />
-
       </div>
     </div>
   </div>
@@ -65,14 +60,7 @@ export default {
     const { data } = useCocktail(route.params.id);
     const updateMutation = useUpdateCocktail(route.params.id);
 
-    const {
-      form,
-      errors,
-      isEditing,
-      setForm,
-      validate,
-      isValid,
-    } = useEditableForm(
+    const { form, errors, isEditing, setForm, validate, isValid } = useEditableForm(
       { title: '', price: null, description: '' },
       updateCocktailSchema,
     );

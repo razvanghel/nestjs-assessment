@@ -51,9 +51,7 @@ export function useEditableForm(initialData, schema) {
   });
 
   const isDirty = computed(() => {
-    return Object.keys(form).some(
-      (key) => form[key] !== original.value[key],
-    );
+    return Object.keys(form).some((key) => form[key] !== original.value[key]);
   });
 
   return {

@@ -1,6 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
 import { toast } from 'vue-sonner';
-import { getCocktails, createCocktail, getCocktailById, updateCocktail } from '@/services/cocktails';
+import {
+  getCocktails,
+  createCocktail,
+  getCocktailById,
+  updateCocktail,
+} from '@/services/cocktails';
 
 export function useCocktails() {
   return useQuery({

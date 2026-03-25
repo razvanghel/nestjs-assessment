@@ -29,10 +29,7 @@ export class CocktailsController {
   }
 
   @Put(':id')
-  async updateCocktail(
-    @Param('id') id: number,
-    @Body() dto: UpdateCocktailDto,
-  ) {
+  async updateCocktail(@Param('id') id: number, @Body() dto: UpdateCocktailDto) {
     return this.cocktailsService.update(id, dto);
   }
 }
