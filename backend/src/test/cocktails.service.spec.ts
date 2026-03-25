@@ -69,9 +69,9 @@ describe('CocktailsService', () => {
     });
 
     it('should throw CocktailIdInvalid when id is NaN', async () => {
-        await expect(service.findOne(NaN)).rejects.toThrow(CocktailIdInvalid);
-        expect(repo.findOneBy).not.toHaveBeenCalled();
-      });
+      await expect(service.findOne(NaN)).rejects.toThrow(CocktailIdInvalid);
+      expect(repo.findOneBy).not.toHaveBeenCalled();
+    });
   });
 
   describe('create', () => {
@@ -93,7 +93,6 @@ describe('CocktailsService', () => {
       await expect(service.create(dto)).rejects.toThrow(CocktailTitleAlreadyExistsException);
       expect(repo.save).not.toHaveBeenCalled();
     });
-    
   });
 
   describe('update', () => {
@@ -102,8 +101,8 @@ describe('CocktailsService', () => {
     it('should update and return the cocktail', async () => {
       const updated = { ...mockCocktail, ...dto };
       repo.findOneBy.mockResolvedValue(mockCocktail);
-      repo.findOneBy.mockResolvedValueOnce(mockCocktail); 
-      repo.findOneBy.mockResolvedValueOnce(null);         
+      repo.findOneBy.mockResolvedValueOnce(mockCocktail);
+      repo.findOneBy.mockResolvedValueOnce(null);
       repo.merge.mockReturnValue(updated);
       repo.save.mockResolvedValue(updated);
 
@@ -119,9 +118,7 @@ describe('CocktailsService', () => {
 
     it('should throw CocktailTitleAlreadyExistsException when new title belongs to another cocktail', async () => {
       const anotherCocktail = { ...mockCocktail, id: 2 };
-      repo.findOneBy
-        .mockResolvedValueOnce(mockCocktail)    
-        .mockResolvedValueOnce(anotherCocktail); 
+      repo.findOneBy.mockResolvedValueOnce(mockCocktail).mockResolvedValueOnce(anotherCocktail);
 
       await expect(service.update(1, dto)).rejects.toThrow(CocktailTitleAlreadyExistsException);
       expect(repo.save).not.toHaveBeenCalled();
@@ -129,9 +126,7 @@ describe('CocktailsService', () => {
 
     it('should allow updating the title to the same value (same id)', async () => {
       const updated = { ...mockCocktail, ...dto };
-      repo.findOneBy
-        .mockResolvedValueOnce(mockCocktail)  
-        .mockResolvedValueOnce(mockCocktail); 
+      repo.findOneBy.mockResolvedValueOnce(mockCocktail).mockResolvedValueOnce(mockCocktail);
       repo.merge.mockReturnValue(updated);
       repo.save.mockResolvedValue(updated);
 

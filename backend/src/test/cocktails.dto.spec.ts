@@ -5,8 +5,8 @@ import { UpdateCocktailDto } from 'src/cocktails/dtos/update-cocktail.dto';
 
 // Helpers
 const validateDto = async (cls: new () => object, plain: Record<string, unknown>) => {
-    const instance = plainToInstance(cls, plain);
-    return validate(instance);
+  const instance = plainToInstance(cls, plain);
+  return validate(instance);
 };
 
 const validPayload = {
@@ -14,7 +14,6 @@ const validPayload = {
   description: 'A refreshing classic cocktail',
   price: 9.99,
 };
-
 
 describe('CreateCocktailDto', () => {
   it('should pass with valid data', async () => {
@@ -34,7 +33,10 @@ describe('CreateCocktailDto', () => {
     });
 
     it('should fail when title is longer than 80 characters', async () => {
-      const errors = await validateDto(CreateCocktailDto, { ...validPayload, title: 'A'.repeat(81) });
+      const errors = await validateDto(CreateCocktailDto, {
+        ...validPayload,
+        title: 'A'.repeat(81),
+      });
       expect(errors.some((e) => e.property === 'title')).toBe(true);
     });
 
@@ -44,7 +46,10 @@ describe('CreateCocktailDto', () => {
     });
 
     it('should pass with title of exactly 80 characters', async () => {
-      const errors = await validateDto(CreateCocktailDto, { ...validPayload, title: 'A'.repeat(80) });
+      const errors = await validateDto(CreateCocktailDto, {
+        ...validPayload,
+        title: 'A'.repeat(80),
+      });
       expect(errors).toHaveLength(0);
     });
   });
@@ -62,17 +67,26 @@ describe('CreateCocktailDto', () => {
     });
 
     it('should fail when description is longer than 200 characters', async () => {
-      const errors = await validateDto(CreateCocktailDto, { ...validPayload, description: 'A'.repeat(201) });
+      const errors = await validateDto(CreateCocktailDto, {
+        ...validPayload,
+        description: 'A'.repeat(201),
+      });
       expect(errors.some((e) => e.property === 'description')).toBe(true);
     });
 
     it('should pass with description of exactly 5 characters', async () => {
-      const errors = await validateDto(CreateCocktailDto, { ...validPayload, description: 'Hello' });
+      const errors = await validateDto(CreateCocktailDto, {
+        ...validPayload,
+        description: 'Hello',
+      });
       expect(errors).toHaveLength(0);
     });
 
     it('should pass with description of exactly 200 characters', async () => {
-      const errors = await validateDto(CreateCocktailDto, { ...validPayload, description: 'A'.repeat(200) });
+      const errors = await validateDto(CreateCocktailDto, {
+        ...validPayload,
+        description: 'A'.repeat(200),
+      });
       expect(errors).toHaveLength(0);
     });
   });
@@ -105,7 +119,6 @@ describe('CreateCocktailDto', () => {
     });
   });
 });
-
 
 describe('UpdateCocktailDto', () => {
   it('should pass with an empty object (all fields optional)', async () => {
