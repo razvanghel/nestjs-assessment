@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Mapping, Settings } from './mapping';
-import { Cocktails } from '../cocktails.entity';
+import { Cocktails } from '../cocktails/cocktails.entity';
 
 @Injectable()
 export class CocktailsSearchService {

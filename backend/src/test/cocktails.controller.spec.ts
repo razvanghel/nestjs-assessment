@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CocktailsController } from 'src/cocktails/cocktails.controller';
 import { Cocktails } from 'src/cocktails/cocktails.entity';
 import { CocktailsService } from 'src/cocktails/cocktails.service';
-import { CocktailsSearchService } from 'src/cocktails/search/cocktails-search.service';
+import { CocktailsSearchService } from 'src/elastic-search/cocktails-search.service';
 
 const mockCocktail: Cocktails = {
   id: 1,
