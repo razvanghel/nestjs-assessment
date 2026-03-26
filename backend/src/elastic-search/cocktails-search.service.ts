@@ -49,6 +49,7 @@ export class CocktailsSearchService {
                 query,
                 fields: ['title^2', 'description'],
                 fuzziness: 'AUTO',
+                prefix_length: 3,
               },
             },
             {
@@ -56,13 +57,6 @@ export class CocktailsSearchService {
                 title: {
                   query,
                   boost: 3,
-                },
-              },
-            },
-            {
-              match_phrase_prefix: {
-                description: {
-                  query,
                 },
               },
             },
