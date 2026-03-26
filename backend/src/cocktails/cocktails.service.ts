@@ -7,7 +7,7 @@ import { CocktailNotFoundException } from 'src/common/exceptions/cocktails/cockt
 import { CocktailTitleAlreadyExistsException } from 'src/common/exceptions/cocktails/cocktail-name-already-exists.exception';
 import { UpdateCocktailDto } from './dtos/update-cocktail.dto';
 import { CocktailIdInvalid } from 'src/common/exceptions/cocktails/cocktail-invalid-id.exception';
-import { CocktailsSearchService } from './search/cocktails-search.service';
+import { CocktailsSearchService } from '../elastic-search/cocktails-search.service';
 
 @Injectable()
 export class CocktailsService {

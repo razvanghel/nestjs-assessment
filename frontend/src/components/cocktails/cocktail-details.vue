@@ -60,7 +60,7 @@ export default {
     const { data } = useCocktail(route.params.id);
     const updateMutation = useUpdateCocktail(route.params.id);
 
-    const { form, errors, isEditing, setForm, validate, isValid } = useEditableForm(
+    const { form, errors, isEditing, setForm, validate, isValid, resetErrors } = useEditableForm(
       { title: '', price: null, description: '' },
       updateCocktailSchema,
     );
@@ -73,6 +73,7 @@ export default {
 
     const cancelEdit = () => {
       setForm(data.value);
+      resetErrors();
       isEditing.value = false;
     };
 
@@ -87,6 +88,7 @@ export default {
         },
         {
           onSuccess: () => {
+            resetErrors();
             isEditing.value = false;
           },
         },
@@ -103,6 +105,7 @@ export default {
       cancelEdit,
       submitUpdate,
       updateMutation,
+      resetErrors,
     };
   },
 };

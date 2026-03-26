@@ -56,6 +56,9 @@ export function useUpdateCocktail(id) {
       queryClient.invalidateQueries({ queryKey: ['cocktails'] });
       toast.success('Cocktail updated successfully');
     },
+    onError: (error) => {
+      toast.error(error?.message);
+    },
   });
 }
 
@@ -69,7 +72,7 @@ export function useDeleteCocktail() {
       toast.success('Cocktail deleted successfully');
     },
     onError: (error) => {
-      toast.error(error?.message || 'Something went wrong');
+      toast.error(error?.message);
     },
   });
 }

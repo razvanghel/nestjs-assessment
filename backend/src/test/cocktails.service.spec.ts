@@ -6,7 +6,7 @@ import { CocktailTitleAlreadyExistsException } from 'src/common/exceptions/cockt
 import { CocktailIdInvalid } from 'src/common/exceptions/cocktails/cocktail-invalid-id.exception';
 import { CocktailsService } from 'src/cocktails/cocktails.service';
 import { Cocktails } from 'src/cocktails/cocktails.entity';
-import { CocktailsSearchService } from 'src/cocktails/search/cocktails-search.service';
+import { CocktailsSearchService } from 'src/elastic-search/cocktails-search.service';
 
 const mockCocktail: Cocktails = {
   id: 1,

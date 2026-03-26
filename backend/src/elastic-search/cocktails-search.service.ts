@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Mapping, Settings } from './mapping';
-import { Cocktails } from '../cocktails.entity';
+import { Cocktails } from '../cocktails/cocktails.entity';
 
 @Injectable()
 export class CocktailsSearchService {
@@ -49,6 +49,7 @@ export class CocktailsSearchService {
                 query,
                 fields: ['title^2', 'description'],
                 fuzziness: 'AUTO',
+                prefix_length: 3,
               },
             },
             {
@@ -56,13 +57,6 @@ export class CocktailsSearchService {
                 title: {
                   query,
                   boost: 3,
-                },
-              },
-            },
-            {
-              match_phrase_prefix: {
-                description: {
-                  query,
                 },
               },
             },
