@@ -1,6 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-10 px-4">
     <div class="mx-auto max-w-3xl">
+      <div class="mb-4">
+        <SearchBar v-model="search" />
+      </div>
+
       <div class="mb-6 flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-900">Cocktails</h1>
 
@@ -76,17 +80,26 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useCocktails, useDeleteCocktail } from '@/queries/cocktails';
 import ConfirmDialog from '@/components/ui/ConfirmDialog.vue';
+import SearchBar from '@/components/ui/SearchBar.vue';
 
 export default {
   name: 'CocktailList',
   components: {
     ConfirmDialog,
+    SearchBar,
   },
   setup() {
-    const { data, isPending, isError, error } = useCocktails();
+    const search = ref('');
+
+    const cocktailsQuery = useCocktails(search);
+    const data = computed(() => cocktailsQuery.data?.value ?? []);
+    const isPending = cocktailsQuery.isPending;
+    const isError = cocktailsQuery.isError;
+    const error = cocktailsQuery.error;
+
     const deleteMutation = useDeleteCocktail();
 
     const isDeleteDialogOpen = ref(false);
@@ -123,6 +136,7 @@ export default {
       openDeleteDialog,
       closeDeleteDialog,
       confirmDelete,
+      search,
     };
   },
 };

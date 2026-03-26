@@ -27,3 +27,6 @@ export function deleteCocktail(id) {
     method: 'DELETE',
   });
 }
+export function searchCocktails(query) {
+  return request(`/cocktails/search?q=${encodeURIComponent(query)}`);
+}

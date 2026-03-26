@@ -1,0 +1,8 @@
+{
+    "name": "nestjs-assessment",
+    "private": true,
+    "scripts": {
+      "install:all": "npm install --prefix backend && npm install --prefix frontend",
+      "format": "npm run format --prefix backend && npm run format --prefix frontend"
+    }
+  }

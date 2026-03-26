@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Cocktails } from './cocktails.entity';
 import { CreateCocktailDto } from './dtos/create-cocktail.dto';
 import { CocktailNotFoundException } from 'src/common/exceptions/cocktails/cocktail-not-found.exception';
 import { CocktailTitleAlreadyExistsException } from 'src/common/exceptions/cocktails/cocktail-name-already-exists.exception';
 import { UpdateCocktailDto } from './dtos/update-cocktail.dto';
 import { CocktailIdInvalid } from 'src/common/exceptions/cocktails/cocktail-invalid-id.exception';
+import { CocktailsSearchService } from './search/cocktails-search.service';
 
 @Injectable()
 export class CocktailsService {
@@ -15,6 +16,7 @@ export class CocktailsService {
   constructor(
     @InjectRepository(Cocktails)
     private usersRepository: Repository<Cocktails>,
+    private readonly searchService: CocktailsSearchService,
   ) {}
 
   findAll(): Promise<Cocktails[]> {
@@ -45,7 +47,25 @@ export class CocktailsService {
     }
 
     const cocktail = this.usersRepository.create(dto);
-    return this.usersRepository.save(cocktail);
+    const saved = await this.usersRepository.save(cocktail);
+    await this.searchService.indexCocktail(saved);
+    return saved;
+  }
+
+  async search(query: string) {
+    const trimmedQuery = query?.trim();
+
+    if (!trimmedQuery) {
+      return this.findAll();
+    }
+    try {
+      return await this.searchService.search(query);
+    } catch (e) {
+      // fallback to DB search if elasticsearch fails
+      return this.usersRepository.find({
+        where: [{ title: ILike(`%${query}%`) }, { description: ILike(`%${query}%`) }],
+      });
+    }
   }
 
   async update(id: number, payload: UpdateCocktailDto) {
