@@ -13,10 +13,10 @@ import { CocktailsSearchService } from './search/cocktails-search.service';
 export class CocktailsService {
   private readonly logger = new Logger(CocktailsService.name);
 
-   async onApplicationBootstrap() {
+  async onApplicationBootstrap() {
     await this.reindexAll();
   }
-  
+
   constructor(
     @InjectRepository(Cocktails)
     private usersRepository: Repository<Cocktails>,
@@ -67,9 +67,8 @@ export class CocktailsService {
     if (!trimmedQuery) {
       return this.findAll();
     }
-    
+
     return await this.searchService.search(query);
-   
   }
 
   async update(id: number, payload: UpdateCocktailDto) {
@@ -81,7 +80,7 @@ export class CocktailsService {
 
     if (payload.title) {
       const duplicate = await this.usersRepository.findOne({
-        where: { title: ILike(payload.title) }, 
+        where: { title: ILike(payload.title) },
       });
 
       if (duplicate && duplicate.id !== id) {
@@ -114,7 +113,7 @@ export class CocktailsService {
 
     await this.usersRepository.remove(existing);
     await this.searchService.deleteCocktail(cocktailId);
-     
+
     return {
       message: 'Cocktail deleted successfully',
     };
@@ -122,12 +121,11 @@ export class CocktailsService {
 
   async reindexAll(): Promise<{ message: string; count: number }> {
     const cocktails = await this.usersRepository.find();
-    
+
     for (const cocktail of cocktails) {
       await this.searchService.indexCocktail(cocktail);
     }
-  
+
     return { message: 'Reindexed successfully', count: cocktails.length };
   }
-
 }

@@ -58,16 +58,12 @@
         </div>
 
         <div
-  v-if="data.length === 0"
-  class="rounded-xl bg-white p-6 text-center text-gray-500 shadow"
->
-  <span v-if="search.trim()">
-    No results for "{{ search }}"
-  </span>
-  <span v-else>
-    No cocktails found.
-  </span>
-</div>
+          v-if="data.length === 0"
+          class="rounded-xl bg-white p-6 text-center text-gray-500 shadow"
+        >
+          <span v-if="search.trim()"> No results for "{{ search }}" </span>
+          <span v-else> No cocktails found. </span>
+        </div>
       </div>
     </div>
 
@@ -101,36 +97,36 @@ export default {
   setup() {
     const search = ref('');
     const {
-  data: searchData,
-  isPending: searchPending,
-  isError: searchError,
-  error: searchErr,
-} = useSearchCocktails(search);
+      data: searchData,
+      isPending: searchPending,
+      isError: searchError,
+      error: searchErr,
+    } = useSearchCocktails(search);
 
-const {
-  data: listData,
-  isPending: listPending,
-  isError: listError,
-  error: listErr,
-} = useCocktails();
+    const {
+      data: listData,
+      isPending: listPending,
+      isError: listError,
+      error: listErr,
+    } = useCocktails();
 
-const isSearching = computed(() => !!search.value.trim());
+    const isSearching = computed(() => !!search.value.trim());
 
-const data = computed(() =>
-  isSearching.value ? (searchData?.value ?? []) : (listData?.value ?? [])
-);
+    const data = computed(() =>
+      isSearching.value ? (searchData?.value ?? []) : (listData?.value ?? []),
+    );
 
-const isPending = computed(() =>
-  isSearching.value ? (searchPending?.value ?? false) : (listPending?.value ?? false)
-);
+    const isPending = computed(() =>
+      isSearching.value ? (searchPending?.value ?? false) : (listPending?.value ?? false),
+    );
 
-const isError = computed(() =>
-  isSearching.value ? (searchError?.value ?? false) : (listError?.value ?? false)
-);
+    const isError = computed(() =>
+      isSearching.value ? (searchError?.value ?? false) : (listError?.value ?? false),
+    );
 
-const error = computed(() =>
-  isSearching.value ? (searchErr?.value ?? null) : (listErr?.value ?? null)
-);
+    const error = computed(() =>
+      isSearching.value ? (searchErr?.value ?? null) : (listErr?.value ?? null),
+    );
 
     const deleteMutation = useDeleteCocktail();
 

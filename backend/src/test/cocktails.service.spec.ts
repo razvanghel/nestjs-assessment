@@ -45,11 +45,11 @@ describe('CocktailsService', () => {
         { provide: CocktailsSearchService, useFactory: mockSearchService },
       ],
     }).compile();
-  
+
     service = testingModule.get<CocktailsService>(CocktailsService);
     repo = testingModule.get(getRepositoryToken(Cocktails));
     searchService = testingModule.get(CocktailsSearchService);
-  
+
     // prevent onApplicationBootstrap from failing every test
     repo.find.mockResolvedValue([]);
     await service.onApplicationBootstrap();
@@ -133,19 +133,19 @@ describe('CocktailsService', () => {
 
     it('should throw CocktailTitleAlreadyExistsException when new title belongs to another cocktail', async () => {
       const anotherCocktail = { ...mockCocktail, id: 2 };
-  
+
       repo.findOneBy.mockResolvedValueOnce(mockCocktail);
-      repo.findOne.mockResolvedValueOnce(anotherCocktail); 
-    
+      repo.findOne.mockResolvedValueOnce(anotherCocktail);
+
       await expect(service.update(1, dto)).rejects.toThrow(CocktailTitleAlreadyExistsException);
       expect(repo.save).not.toHaveBeenCalled();
     });
 
     it('should allow updating the title to the same value (same id)', async () => {
       const updated = { ...mockCocktail, ...dto };
-  
-      repo.findOneBy.mockResolvedValueOnce(mockCocktail); 
-      repo.findOne.mockResolvedValueOnce(mockCocktail);   
+
+      repo.findOneBy.mockResolvedValueOnce(mockCocktail);
+      repo.findOne.mockResolvedValueOnce(mockCocktail);
       repo.merge.mockReturnValue(updated);
       repo.save.mockResolvedValue(updated);
 
@@ -177,27 +177,27 @@ describe('CocktailsService', () => {
   describe('search', () => {
     it('should return results from Elasticsearch', async () => {
       searchService.search.mockResolvedValue([mockCocktail]);
-  
+
       const result = await service.search('mojito');
-  
+
       expect(result).toEqual([mockCocktail]);
       expect(searchService.search).toHaveBeenCalledWith('mojito');
     });
-  
+
     it('should return all cocktails when query is empty', async () => {
       repo.find.mockResolvedValue([mockCocktail]);
-  
+
       const result = await service.search('');
-  
+
       expect(result).toEqual([mockCocktail]);
       expect(searchService.search).not.toHaveBeenCalled();
     });
-  
+
     it('should return all cocktails when query is only whitespace', async () => {
       repo.find.mockResolvedValue([mockCocktail]);
-  
+
       const result = await service.search('   ');
-  
+
       expect(result).toEqual([mockCocktail]);
       expect(searchService.search).not.toHaveBeenCalled();
     });
@@ -205,18 +205,18 @@ describe('CocktailsService', () => {
   describe('reindexAll', () => {
     it('should index all cocktails and return count', async () => {
       repo.find.mockResolvedValue([mockCocktail]);
-  
+
       const result = await service.reindexAll();
-  
+
       expect(result).toEqual({ message: 'Reindexed successfully', count: 1 });
       expect(searchService.indexCocktail).toHaveBeenCalledWith(mockCocktail);
     });
-  
+
     it('should return count 0 when no cocktails exist', async () => {
       repo.find.mockResolvedValue([]);
-  
+
       const result = await service.reindexAll();
-  
+
       expect(result).toEqual({ message: 'Reindexed successfully', count: 0 });
       expect(searchService.indexCocktail).not.toHaveBeenCalled();
     });

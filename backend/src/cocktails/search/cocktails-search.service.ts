@@ -70,7 +70,7 @@ export class CocktailsSearchService {
         },
       },
     });
-  
+
     return result.hits.hits.map((hit: any) => hit._source);
   }
 
