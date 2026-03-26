@@ -53,6 +53,11 @@ export class CocktailsService {
   }
 
   async search(query: string) {
+    const trimmedQuery = query?.trim();
+
+    if (!trimmedQuery) {
+      return this.findAll();
+    }
     try {
       return await this.searchService.search(query);
     } catch (e) {

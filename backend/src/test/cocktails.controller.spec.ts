@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CocktailsController } from 'src/cocktails/cocktails.controller';
 import { Cocktails } from 'src/cocktails/cocktails.entity';
 import { CocktailsService } from 'src/cocktails/cocktails.service';
+import { CocktailsSearchService } from 'src/cocktails/search/cocktails-search.service';
 
 const mockCocktail: Cocktails = {
   id: 1,
@@ -16,6 +17,7 @@ const mockService = () => ({
   create: jest.fn(),
   update: jest.fn(),
   remove: jest.fn(),
+  search: jest.fn(),
 });
 
 describe('CocktailsController', () => {
@@ -23,13 +25,13 @@ describe('CocktailsController', () => {
   let service: jest.Mocked<CocktailsService>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const testingModule: TestingModule = await Test.createTestingModule({
       controllers: [CocktailsController],
       providers: [{ provide: CocktailsService, useFactory: mockService }],
     }).compile();
 
-    controller = module.get<CocktailsController>(CocktailsController);
-    service = module.get(CocktailsService);
+    controller = testingModule.get<CocktailsController>(CocktailsController);
+    service = testingModule.get(CocktailsService);
   });
 
   describe('getAllCocktails', () => {
@@ -92,5 +94,23 @@ describe('CocktailsController', () => {
       expect(result).toEqual({ message: 'Cocktail deleted successfully' });
       expect(service.remove).toHaveBeenCalledWith(1);
     });
+  });
+  
+  describe('search', () => {
+    it('should call service.search with query', async () => {
+      service.search.mockResolvedValue([mockCocktail]);
+      const result = await controller.search('mojito');
+  
+      expect(result).toEqual([mockCocktail]);
+      expect(service.search).toHaveBeenCalledWith('mojito');
+    });
+  });
+  it('should handle empty query', async () => {
+    service.search.mockResolvedValue([]);
+  
+    const result = await controller.search('');
+  
+    expect(result).toEqual([]);
+    expect(service.search).toHaveBeenCalledWith('');
   });
 });
