@@ -8,7 +8,7 @@ import { CocktailsSearchModule } from './search/cocktail-search.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Cocktails]), CocktailsSearchModule],
-  providers: [CocktailsService], 
+  providers: [CocktailsService],
   controllers: [CocktailsController],
 })
 export class CocktailsModule {}

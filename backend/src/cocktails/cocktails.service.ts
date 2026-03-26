@@ -58,10 +58,7 @@ export class CocktailsService {
     } catch (e) {
       // fallback to DB search if elasticsearch fails
       return this.usersRepository.find({
-        where: [
-          { title: ILike(`%${query}%`) },
-          { description: ILike(`%${query}%`) },
-        ],
+        where: [{ title: ILike(`%${query}%`) }, { description: ILike(`%${query}%`) }],
       });
     }
   }

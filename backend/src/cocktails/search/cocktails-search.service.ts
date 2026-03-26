@@ -13,15 +13,15 @@ export class CocktailsSearchService {
     const exists = await this.esService.indices.exists({
       index: this.index,
     });
-  
+
     if (!exists) {
-        await this.esService.indices.create({
-            index: this.index,
-            body: {
-              mappings: Mapping,
-              settings: Settings,
-            },
-          } as any);
+      await this.esService.indices.create({
+        index: this.index,
+        body: {
+          mappings: Mapping,
+          settings: Settings,
+        },
+      } as any);
     }
   }
 
@@ -45,12 +45,7 @@ export class CocktailsSearchService {
         multi_match: {
           query,
           type: 'cross_fields',
-          fields: [
-            'title^2',
-            'title.word_delimiter',
-            'description',
-            'description.word_delimiter',
-          ],
+          fields: ['title^2', 'title.word_delimiter', 'description', 'description.word_delimiter'],
           fuzziness: 'AUTO',
           prefix_length: 1,
         },

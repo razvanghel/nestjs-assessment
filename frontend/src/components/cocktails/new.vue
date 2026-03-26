@@ -4,8 +4,8 @@
       @submit.prevent="submitForm"
       class="w-full max-w-md bg-white shadow-md rounded-2xl p-6 space-y-5"
     >
-    <div class="flex items-center justify-between">
-      <router-link to="/" class="mb-6 inline-flex text-blue-600"> ← Back </router-link>
+      <div class="flex items-center justify-between">
+        <router-link to="/" class="mb-6 inline-flex text-blue-600"> ← Back </router-link>
 
         <h2 class="text-xl font-semibold text-gray-800">Create Cocktail</h2>
 
