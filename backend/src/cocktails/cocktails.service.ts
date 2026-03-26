@@ -13,6 +13,10 @@ import { CocktailsSearchService } from './search/cocktails-search.service';
 export class CocktailsService {
   private readonly logger = new Logger(CocktailsService.name);
 
+   async onApplicationBootstrap() {
+    await this.reindexAll();
+  }
+  
   constructor(
     @InjectRepository(Cocktails)
     private usersRepository: Repository<Cocktails>,
@@ -115,4 +119,15 @@ export class CocktailsService {
       message: 'Cocktail deleted successfully',
     };
   }
+
+  async reindexAll(): Promise<{ message: string; count: number }> {
+    const cocktails = await this.usersRepository.find();
+    
+    for (const cocktail of cocktails) {
+      await this.searchService.indexCocktail(cocktail);
+    }
+  
+    return { message: 'Reindexed successfully', count: cocktails.length };
+  }
+
 }
