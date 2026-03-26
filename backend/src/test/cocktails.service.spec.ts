@@ -43,7 +43,7 @@ describe('CocktailsService', () => {
         { provide: CocktailsSearchService, useFactory: mockSearchService },
       ],
     }).compile();
-    
+
     service = testingModule.get<CocktailsService>(CocktailsService);
     repo = testingModule.get(getRepositoryToken(Cocktails));
     searchService = testingModule.get(CocktailsSearchService);
@@ -90,9 +90,9 @@ describe('CocktailsService', () => {
       repo.findOne.mockResolvedValue(null);
       repo.create.mockReturnValue(mockCocktail);
       repo.save.mockResolvedValue(mockCocktail);
-    
+
       const result = await service.create(dto);
-    
+
       expect(result).toEqual(mockCocktail);
       expect(searchService.indexCocktail).toHaveBeenCalledWith(mockCocktail);
     });
@@ -168,33 +168,30 @@ describe('CocktailsService', () => {
     it('should return results from Elasticsearch when it succeeds', async () => {
       const results = [mockCocktail];
       searchService.search.mockResolvedValue(results);
-  
+
       const result = await service.search('mojito');
-  
+
       expect(result).toEqual(results);
       expect(searchService.search).toHaveBeenCalledWith('mojito');
     });
-  
+
     it('should fallback to database search when Elasticsearch fails', async () => {
       searchService.search.mockRejectedValue(new Error('ES down'));
       repo.find.mockResolvedValue([mockCocktail]);
-    
+
       const result = await service.search('mojito');
-    
+
       expect(result).toEqual([mockCocktail]);
       expect(repo.find).toHaveBeenCalledWith({
-        where: [
-          { title: expect.anything() },
-          { description: expect.anything() },
-        ],
+        where: [{ title: expect.anything() }, { description: expect.anything() }],
       });
     });
-    
+
     it('should return all cocktails when query is only whitespace', async () => {
       repo.find.mockResolvedValue([mockCocktail]);
-    
+
       const result = await service.search('   ');
-    
+
       expect(result).toEqual([mockCocktail]);
       expect(repo.find).toHaveBeenCalledTimes(1);
       expect(searchService.search).not.toHaveBeenCalled();
@@ -202,9 +199,9 @@ describe('CocktailsService', () => {
 
     it('should return all cocktails when query is empty', async () => {
       repo.find.mockResolvedValue([mockCocktail]);
-    
+
       const result = await service.search('');
-    
+
       expect(result).toEqual([mockCocktail]);
       expect(repo.find).toHaveBeenCalledTimes(1);
       expect(searchService.search).not.toHaveBeenCalled();
@@ -213,14 +210,11 @@ describe('CocktailsService', () => {
     it('should search in title and description in fallback', async () => {
       searchService.search.mockRejectedValue(new Error('ES down'));
       repo.find.mockResolvedValue([]);
-  
+
       await service.search('mint');
-  
+
       expect(repo.find).toHaveBeenCalledWith({
-        where: [
-          { title: expect.anything() },
-          { description: expect.anything() },
-        ],
+        where: [{ title: expect.anything() }, { description: expect.anything() }],
       });
     });
   });

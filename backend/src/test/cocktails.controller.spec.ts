@@ -95,21 +95,21 @@ describe('CocktailsController', () => {
       expect(service.remove).toHaveBeenCalledWith(1);
     });
   });
-  
+
   describe('search', () => {
     it('should call service.search with query', async () => {
       service.search.mockResolvedValue([mockCocktail]);
       const result = await controller.search('mojito');
-  
+
       expect(result).toEqual([mockCocktail]);
       expect(service.search).toHaveBeenCalledWith('mojito');
     });
   });
   it('should handle empty query', async () => {
     service.search.mockResolvedValue([]);
-  
+
     const result = await controller.search('');
-  
+
     expect(result).toEqual([]);
     expect(service.search).toHaveBeenCalledWith('');
   });
