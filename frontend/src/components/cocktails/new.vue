@@ -4,8 +4,13 @@
       @submit.prevent="submitForm"
       class="w-full max-w-md bg-white shadow-md rounded-2xl p-6 space-y-5"
     >
-      <h2 class="text-xl font-semibold text-gray-800">Create Cocktail</h2>
+    <div class="flex items-center justify-between">
+      <router-link to="/" class="mb-6 inline-flex text-blue-600"> ← Back </router-link>
 
+        <h2 class="text-xl font-semibold text-gray-800">Create Cocktail</h2>
+
+        <div class="w-[72px]"></div>
+      </div>
       <!-- Title -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1"> Title </label>
