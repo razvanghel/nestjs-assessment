@@ -17,7 +17,9 @@
       </div>
 
       <div v-if="isPending" class="rounded-xl bg-white p-6 text-center shadow">
-        <p class="text-gray-500">Loading cocktails...</p>
+        <p class="text-gray-500">
+          {{ search.trim() ? 'Searching...' : 'Loading cocktails...' }}
+        </p>
       </div>
 
       <div v-else-if="isError" class="rounded-xl bg-white p-6 text-center text-red-500 shadow">
@@ -56,17 +58,22 @@
         </div>
 
         <div
-          v-if="data.length === 0"
-          class="rounded-xl bg-white p-6 text-center text-gray-500 shadow"
-        >
-          No cocktails found.
-        </div>
+  v-if="data.length === 0"
+  class="rounded-xl bg-white p-6 text-center text-gray-500 shadow"
+>
+  <span v-if="search.trim()">
+    No results for "{{ search }}"
+  </span>
+  <span v-else>
+    No cocktails found.
+  </span>
+</div>
       </div>
     </div>
 
     <ConfirmDialog
       :open="isDeleteDialogOpen"
-      :loading="deleteMutation.isPending.value"
+      :loading="isDeletePending"
       title="Delete cocktail"
       :message="
         cocktailToDelete
@@ -81,7 +88,7 @@
 
 <script>
 import { computed, ref } from 'vue';
-import { useCocktails, useDeleteCocktail } from '@/queries/cocktails';
+import { useCocktails, useDeleteCocktail, useSearchCocktails } from '@/queries/cocktails';
 import ConfirmDialog from '@/components/ui/ConfirmDialog.vue';
 import SearchBar from '@/components/ui/SearchBar.vue';
 
@@ -93,12 +100,37 @@ export default {
   },
   setup() {
     const search = ref('');
+    const {
+  data: searchData,
+  isPending: searchPending,
+  isError: searchError,
+  error: searchErr,
+} = useSearchCocktails(search);
 
-    const cocktailsQuery = useCocktails(search);
-    const data = computed(() => cocktailsQuery.data?.value ?? []);
-    const isPending = cocktailsQuery.isPending;
-    const isError = cocktailsQuery.isError;
-    const error = cocktailsQuery.error;
+const {
+  data: listData,
+  isPending: listPending,
+  isError: listError,
+  error: listErr,
+} = useCocktails();
+
+const isSearching = computed(() => !!search.value.trim());
+
+const data = computed(() =>
+  isSearching.value ? (searchData?.value ?? []) : (listData?.value ?? [])
+);
+
+const isPending = computed(() =>
+  isSearching.value ? (searchPending?.value ?? false) : (listPending?.value ?? false)
+);
+
+const isError = computed(() =>
+  isSearching.value ? (searchError?.value ?? false) : (listError?.value ?? false)
+);
+
+const error = computed(() =>
+  isSearching.value ? (searchErr?.value ?? null) : (listErr?.value ?? null)
+);
 
     const deleteMutation = useDeleteCocktail();
 
@@ -114,6 +146,8 @@ export default {
       isDeleteDialogOpen.value = false;
       cocktailToDelete.value = null;
     };
+
+    const { isPending: isDeletePending } = deleteMutation;
 
     const confirmDelete = () => {
       if (!cocktailToDelete.value) return;
@@ -136,6 +170,7 @@ export default {
       openDeleteDialog,
       closeDeleteDialog,
       confirmDelete,
+      isDeletePending,
       search,
     };
   },

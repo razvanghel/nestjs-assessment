@@ -8,22 +8,22 @@ import {
   deleteCocktail,
   searchCocktails,
 } from '@/services/cocktails';
+import { computed } from 'vue';
 
-export function useCocktails(search) {
+export function useCocktails() {
   return useQuery({
-    queryKey: ['cocktails', search],
-    queryFn: () => {
-      const value = search?.value?.trim();
-
-      if (!value) {
-        return getCocktails();
-      }
-
-      return searchCocktails(value);
-    },
+    queryKey: ['cocktails', 'list'],
+    queryFn: getCocktails,
   });
 }
-
+export function useSearchCocktails(search) {
+  return useQuery({
+    queryKey: computed(() => ['cocktails', 'search', search.value]),
+    queryFn: () => searchCocktails(search.value),
+    enabled: computed(() => !!search.value?.trim()),
+    staleTime: 0,
+  });
+}
 export function useCocktail(id) {
   return useQuery({
     queryKey: ['cocktail', id],

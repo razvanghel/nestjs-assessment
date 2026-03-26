@@ -134,7 +134,7 @@ export default {
 
       const result = createCocktailSchema.safeParse({
         ...form,
-        price: form.price, // IMPORTANT: let Zod preprocess handle it
+        price: form.price,
       });
 
       if (!result.success) {
