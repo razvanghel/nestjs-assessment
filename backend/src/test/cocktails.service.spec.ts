@@ -28,6 +28,8 @@ const mockRepository = () => ({
 const mockSearchService = () => ({
   search: jest.fn(),
   indexCocktail: jest.fn(),
+  deleteCocktail: jest.fn(),
+  getCount: jest.fn(),
 });
 
 describe('CocktailsService', () => {
@@ -47,6 +49,10 @@ describe('CocktailsService', () => {
     service = testingModule.get<CocktailsService>(CocktailsService);
     repo = testingModule.get(getRepositoryToken(Cocktails));
     searchService = testingModule.get(CocktailsSearchService);
+
+    // prevent onApplicationBootstrap from failing every test
+    repo.find.mockResolvedValue([]);
+    await service.onApplicationBootstrap();
   });
 
   describe('findAll', () => {
@@ -54,7 +60,7 @@ describe('CocktailsService', () => {
       repo.find.mockResolvedValue([mockCocktail]);
       const result = await service.findAll();
       expect(result).toEqual([mockCocktail]);
-      expect(repo.find).toHaveBeenCalledTimes(1);
+      expect(repo.find).toHaveBeenCalled();
     });
 
     it('should return an empty array when there are no cocktails', async () => {
@@ -127,7 +133,9 @@ describe('CocktailsService', () => {
 
     it('should throw CocktailTitleAlreadyExistsException when new title belongs to another cocktail', async () => {
       const anotherCocktail = { ...mockCocktail, id: 2 };
-      repo.findOneBy.mockResolvedValueOnce(mockCocktail).mockResolvedValueOnce(anotherCocktail);
+
+      repo.findOneBy.mockResolvedValueOnce(mockCocktail);
+      repo.findOne.mockResolvedValueOnce(anotherCocktail);
 
       await expect(service.update(1, dto)).rejects.toThrow(CocktailTitleAlreadyExistsException);
       expect(repo.save).not.toHaveBeenCalled();
@@ -135,7 +143,9 @@ describe('CocktailsService', () => {
 
     it('should allow updating the title to the same value (same id)', async () => {
       const updated = { ...mockCocktail, ...dto };
-      repo.findOneBy.mockResolvedValueOnce(mockCocktail).mockResolvedValueOnce(mockCocktail);
+
+      repo.findOneBy.mockResolvedValueOnce(mockCocktail);
+      repo.findOne.mockResolvedValueOnce(mockCocktail);
       repo.merge.mockReturnValue(updated);
       repo.save.mockResolvedValue(updated);
 
@@ -165,36 +175,13 @@ describe('CocktailsService', () => {
   });
 
   describe('search', () => {
-    it('should return results from Elasticsearch when it succeeds', async () => {
-      const results = [mockCocktail];
-      searchService.search.mockResolvedValue(results);
+    it('should return results from Elasticsearch', async () => {
+      searchService.search.mockResolvedValue([mockCocktail]);
 
       const result = await service.search('mojito');
 
-      expect(result).toEqual(results);
+      expect(result).toEqual([mockCocktail]);
       expect(searchService.search).toHaveBeenCalledWith('mojito');
-    });
-
-    it('should fallback to database search when Elasticsearch fails', async () => {
-      searchService.search.mockRejectedValue(new Error('ES down'));
-      repo.find.mockResolvedValue([mockCocktail]);
-
-      const result = await service.search('mojito');
-
-      expect(result).toEqual([mockCocktail]);
-      expect(repo.find).toHaveBeenCalledWith({
-        where: [{ title: expect.anything() }, { description: expect.anything() }],
-      });
-    });
-
-    it('should return all cocktails when query is only whitespace', async () => {
-      repo.find.mockResolvedValue([mockCocktail]);
-
-      const result = await service.search('   ');
-
-      expect(result).toEqual([mockCocktail]);
-      expect(repo.find).toHaveBeenCalledTimes(1);
-      expect(searchService.search).not.toHaveBeenCalled();
     });
 
     it('should return all cocktails when query is empty', async () => {
@@ -203,19 +190,35 @@ describe('CocktailsService', () => {
       const result = await service.search('');
 
       expect(result).toEqual([mockCocktail]);
-      expect(repo.find).toHaveBeenCalledTimes(1);
       expect(searchService.search).not.toHaveBeenCalled();
     });
 
-    it('should search in title and description in fallback', async () => {
-      searchService.search.mockRejectedValue(new Error('ES down'));
+    it('should return all cocktails when query is only whitespace', async () => {
+      repo.find.mockResolvedValue([mockCocktail]);
+
+      const result = await service.search('   ');
+
+      expect(result).toEqual([mockCocktail]);
+      expect(searchService.search).not.toHaveBeenCalled();
+    });
+  });
+  describe('reindexAll', () => {
+    it('should index all cocktails and return count', async () => {
+      repo.find.mockResolvedValue([mockCocktail]);
+
+      const result = await service.reindexAll();
+
+      expect(result).toEqual({ message: 'Reindexed successfully', count: 1 });
+      expect(searchService.indexCocktail).toHaveBeenCalledWith(mockCocktail);
+    });
+
+    it('should return count 0 when no cocktails exist', async () => {
       repo.find.mockResolvedValue([]);
 
-      await service.search('mint');
+      const result = await service.reindexAll();
 
-      expect(repo.find).toHaveBeenCalledWith({
-        where: [{ title: expect.anything() }, { description: expect.anything() }],
-      });
+      expect(result).toEqual({ message: 'Reindexed successfully', count: 0 });
+      expect(searchService.indexCocktail).not.toHaveBeenCalled();
     });
   });
 });

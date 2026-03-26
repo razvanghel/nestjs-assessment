@@ -42,16 +42,45 @@ export class CocktailsSearchService {
     const result = await this.esService.search({
       index: this.index,
       query: {
-        multi_match: {
-          query,
-          type: 'cross_fields',
-          fields: ['title^2', 'title.word_delimiter', 'description', 'description.word_delimiter'],
-          fuzziness: 'AUTO',
-          prefix_length: 1,
+        bool: {
+          should: [
+            {
+              multi_match: {
+                query,
+                fields: ['title^2', 'description'],
+                fuzziness: 'AUTO',
+              },
+            },
+            {
+              match_phrase_prefix: {
+                title: {
+                  query,
+                  boost: 3,
+                },
+              },
+            },
+            {
+              match_phrase_prefix: {
+                description: {
+                  query,
+                },
+              },
+            },
+          ],
         },
       },
     });
 
     return result.hits.hits.map((hit: any) => hit._source);
+  }
+
+  async deleteCocktail(id: number) {
+    await this.esService.delete(
+      {
+        index: 'cocktails',
+        id: String(id),
+      },
+      { ignore: [404] },
+    );
   }
 }

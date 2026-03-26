@@ -13,6 +13,10 @@ import { CocktailsSearchService } from './search/cocktails-search.service';
 export class CocktailsService {
   private readonly logger = new Logger(CocktailsService.name);
 
+  async onApplicationBootstrap() {
+    await this.reindexAll();
+  }
+
   constructor(
     @InjectRepository(Cocktails)
     private usersRepository: Repository<Cocktails>,
@@ -39,7 +43,7 @@ export class CocktailsService {
 
   async create(dto: CreateCocktailDto): Promise<Cocktails> {
     const existing = await this.usersRepository.findOne({
-      where: { title: dto.title },
+      where: { title: ILike(dto.title) },
     });
 
     if (existing) {
@@ -48,7 +52,12 @@ export class CocktailsService {
 
     const cocktail = this.usersRepository.create(dto);
     const saved = await this.usersRepository.save(cocktail);
-    await this.searchService.indexCocktail(saved);
+    try {
+      await this.searchService.indexCocktail(saved);
+    } catch (e) {
+      //prevent ES failure from breaking the API
+      this.logger.warn('Failed to sync ES index');
+    }
     return saved;
   }
 
@@ -58,14 +67,8 @@ export class CocktailsService {
     if (!trimmedQuery) {
       return this.findAll();
     }
-    try {
-      return await this.searchService.search(query);
-    } catch (e) {
-      // fallback to DB search if elasticsearch fails
-      return this.usersRepository.find({
-        where: [{ title: ILike(`%${query}%`) }, { description: ILike(`%${query}%`) }],
-      });
-    }
+
+    return await this.searchService.search(query);
   }
 
   async update(id: number, payload: UpdateCocktailDto) {
@@ -76,8 +79,8 @@ export class CocktailsService {
     }
 
     if (payload.title) {
-      const duplicate = await this.usersRepository.findOneBy({
-        title: payload.title,
+      const duplicate = await this.usersRepository.findOne({
+        where: { title: ILike(payload.title) },
       });
 
       if (duplicate && duplicate.id !== id) {
@@ -87,7 +90,14 @@ export class CocktailsService {
 
     const updated = this.usersRepository.merge(existing, payload);
 
-    return this.usersRepository.save(updated);
+    const saved = await this.usersRepository.save(updated);
+    try {
+      await this.searchService.indexCocktail(saved);
+    } catch (e) {
+      //prevent ES failure from breaking the API
+      this.logger.warn('Failed to sync ES index');
+    }
+    return saved;
   }
 
   async remove(id: number): Promise<{ message: string }> {
@@ -102,9 +112,20 @@ export class CocktailsService {
     }
 
     await this.usersRepository.remove(existing);
+    await this.searchService.deleteCocktail(cocktailId);
 
     return {
       message: 'Cocktail deleted successfully',
     };
+  }
+
+  async reindexAll(): Promise<{ message: string; count: number }> {
+    const cocktails = await this.usersRepository.find();
+
+    for (const cocktail of cocktails) {
+      await this.searchService.indexCocktail(cocktail);
+    }
+
+    return { message: 'Reindexed successfully', count: cocktails.length };
   }
 }
