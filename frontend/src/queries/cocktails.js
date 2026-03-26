@@ -6,12 +6,21 @@ import {
   getCocktailById,
   updateCocktail,
   deleteCocktail,
+  searchCocktails,
 } from '@/services/cocktails';
 
-export function useCocktails() {
+export function useCocktails(search) {
   return useQuery({
-    queryKey: ['cocktails'],
-    queryFn: getCocktails,
+    queryKey: ['cocktails', search],
+    queryFn: () => {
+      const value = search?.value?.trim();
+
+      if (!value) {
+        return getCocktails();
+      }
+
+      return searchCocktails(value);
+    },
   });
 }
 
