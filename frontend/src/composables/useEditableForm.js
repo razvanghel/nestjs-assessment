@@ -62,6 +62,6 @@ export function useEditableForm(initialData, schema) {
     validate,
     isValid,
     isDirty,
-    resetErrors
+    resetErrors,
   };
 }

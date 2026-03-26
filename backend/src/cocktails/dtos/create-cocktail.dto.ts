@@ -22,6 +22,6 @@ export class CreateCocktailDto {
   @ApiProperty({ example: 12, minimum: 1, maximum: 10000 })
   @IsNumber()
   @Min(1)
-  @Max(10000) 
+  @Max(10000)
   price: number;
 }

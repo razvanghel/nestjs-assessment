@@ -41,7 +41,11 @@ export class CocktailsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new cocktail' })
-  @ApiResponse({ status: 201, description: 'Cocktail created successfully', type: CocktailResponseDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Cocktail created successfully',
+    type: CocktailResponseDto,
+  })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 409, description: 'Title already exists' })
   async newCocktail(@Body() cocktailDto: CreateCocktailDto): Promise<CocktailResponseDto> {
@@ -53,10 +57,17 @@ export class CocktailsController {
   @Put(':id')
   @ApiOperation({ summary: 'Update a cocktail' })
   @ApiParam({ name: 'id', description: 'Cocktail ID', example: 1 })
-  @ApiResponse({ status: 200, description: 'Cocktail updated successfully', type: CocktailResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Cocktail updated successfully',
+    type: CocktailResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Cocktail not found' })
   @ApiResponse({ status: 409, description: 'Title already exists' })
-  async updateCocktail(@Param('id') id: number, @Body() dto: UpdateCocktailDto): Promise<CocktailResponseDto> {
+  async updateCocktail(
+    @Param('id') id: number,
+    @Body() dto: UpdateCocktailDto,
+  ): Promise<CocktailResponseDto> {
     const cocktail = await this.cocktailsService.update(id, dto);
     return CocktailResponseDto.fromEntity(cocktail);
   }
@@ -64,7 +75,11 @@ export class CocktailsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a cocktail' })
   @ApiParam({ name: 'id', description: 'Cocktail ID', example: 1 })
-  @ApiResponse({ status: 200, description: 'Cocktail deleted successfully', schema: { example: { message: 'Cocktail deleted successfully' } } })
+  @ApiResponse({
+    status: 200,
+    description: 'Cocktail deleted successfully',
+    schema: { example: { message: 'Cocktail deleted successfully' } },
+  })
   @ApiResponse({ status: 404, description: 'Cocktail not found' })
   async deleteCocktail(@Param('id') id: string): Promise<{ message: string }> {
     this.logger.log(`Deleting cocktail with id: ${id}`);

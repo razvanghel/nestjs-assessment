@@ -105,7 +105,7 @@ export default {
       cancelEdit,
       submitUpdate,
       updateMutation,
-      resetErrors
+      resetErrors,
     };
   },
 };
