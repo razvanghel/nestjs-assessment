@@ -22,7 +22,11 @@ export class CocktailsService {
   }
 
   async findOne(id: number): Promise<Cocktails | null> {
-    const cocktail = await this.usersRepository.findOneBy({ id });
+    const cocktailId = Number(id);
+    if (Number.isNaN(cocktailId)) {
+      throw new CocktailIdInvalid();
+    }
+    const cocktail = await this.usersRepository.findOneBy({ id: cocktailId });
 
     if (!cocktail) {
       throw new CocktailNotFoundException(id);
