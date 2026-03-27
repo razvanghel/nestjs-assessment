@@ -12,7 +12,7 @@ const validateDto = async (cls: new () => object, plain: Record<string, unknown>
 const validPayload = {
   title: 'Mojito',
   description: 'A refreshing classic cocktail',
-  price: 9.99,
+  price: 10,
 };
 
 describe('CreateCocktailDto', () => {
@@ -32,10 +32,10 @@ describe('CreateCocktailDto', () => {
       expect(errors.some((e) => e.property === 'title')).toBe(true);
     });
 
-    it('should fail when title is longer than 80 characters', async () => {
+    it('should fail when title is longer than 40 characters', async () => {
       const errors = await validateDto(CreateCocktailDto, {
         ...validPayload,
-        title: 'A'.repeat(81),
+        title: 'A'.repeat(41),
       });
       expect(errors.some((e) => e.property === 'title')).toBe(true);
     });
@@ -45,10 +45,10 @@ describe('CreateCocktailDto', () => {
       expect(errors).toHaveLength(0);
     });
 
-    it('should pass with title of exactly 80 characters', async () => {
+    it('should pass with title of exactly 40 characters', async () => {
       const errors = await validateDto(CreateCocktailDto, {
         ...validPayload,
-        title: 'A'.repeat(80),
+        title: 'A'.repeat(40),
       });
       expect(errors).toHaveLength(0);
     });
@@ -66,10 +66,10 @@ describe('CreateCocktailDto', () => {
       expect(errors.some((e) => e.property === 'description')).toBe(true);
     });
 
-    it('should fail when description is longer than 200 characters', async () => {
+    it('should fail when description is longer than 300 characters', async () => {
       const errors = await validateDto(CreateCocktailDto, {
         ...validPayload,
-        description: 'A'.repeat(201),
+        description: 'A'.repeat(301),
       });
       expect(errors.some((e) => e.property === 'description')).toBe(true);
     });
@@ -113,8 +113,8 @@ describe('CreateCocktailDto', () => {
       expect(errors.some((e) => e.property === 'price')).toBe(true);
     });
 
-    it('should pass with price of 0.01', async () => {
-      const errors = await validateDto(CreateCocktailDto, { ...validPayload, price: 0.01 });
+    it('should pass with price of 1', async () => {
+      const errors = await validateDto(CreateCocktailDto, { ...validPayload, price: 1 });
       expect(errors).toHaveLength(0);
     });
   });

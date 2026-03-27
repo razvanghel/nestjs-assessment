@@ -1,22 +1,76 @@
-# Assignment
-Our simple cocktail app has a DB of cocktail recipies with a backend and front end to retrieve and show the cocktails. There are currently two views, a list cocktails view and add new cocktail view. In general we don't really care about styling, so keep it simple and no need to add fancy UI features. What we would like to see, is to add the following features:
-* From the list page we want to navigate to a new view to see details on any selected cocktail. (We do not care about styling for this new view)
-* Complete the "Search by description" functionality on the list page by adding a filter on the cocktail list based on description.
-* On the new cocktail page, add feedback in case of API error. for example try to add a second 'Nojito', see how cocktail name has to be unique
+# Cocktails App
 
-# Submitting requirements
-The project is expected to be delivered as a GitHub (or any other public git
-hosting) repository URL. Please **DO NOT fork** this project.
+A full-stack cocktail management app built with **Vue 3**, **NestJS**, **PostgreSQL**, and **Elasticsearch**.
 
-# Bonus
-Feel free to add one additional features for bonus points, here are some suggestions:
-* Fuzzy Search on description and title using ElasticSearch (service is already installed)
-* OpenAPI documentation of APIs
-* Integration tests
 
-# Provided boilerplate
-https://github.com/eduard-wu/fullstack-nodejs-assessment
-* Basic Vue3 front end with all required pages and views
-* Basic NestJS Backend for existing page and connection to DB
-* ElasticSearch is setup
-* Basic list of recipes are present in database
+## Setup
+
+### 1. Copy the frontend environment file
+
+```bash
+cp frontend/.env.example frontend/.env
+```
+
+
+## Install & Run
+
+### 2. Install dependencies
+
+```bash
+npm run install:all
+```
+
+### 3. Start the app
+
+```bash
+docker compose up --build
+```
+
+The app will be available at:
+- **Frontend**: http://localhost:8080
+- **Backend API**: http://localhost:3000
+- **Swagger Docs**: http://localhost:3000/api/docs
+- **Kibana**: http://localhost:5601
+
+---
+
+## Testing Elasticsearch Search
+
+The search uses fuzzy matching powered by Elasticsearch, so it handles typos and partial words automatically.
+
+Open the frontend at http://localhost:8080 and try these in the search bar:
+
+| You type | You get |
+|----------|---------|
+| `mojto` | Mojito |
+| `marg` | Margarita |
+| `nojito` | Nojito |
+| `strwberry` | Strawberry Lemonade |
+
+---
+
+## Testing
+
+### Unit Tests
+
+Tests for service logic, controller behavior, and DTO validation — all dependencies are mocked.
+
+```bash
+npm run test:unit
+```
+
+### Integration Tests
+
+Integration tests spin up **real PostgreSQL and Elasticsearch instances** using [Testcontainers](https://testcontainers.com/) — no manual setup or mocking required. Each test run gets a fresh, isolated environment that is torn down automatically after the suite completes.
+
+```bash
+npm run test:integration
+```
+
+> !!! Integration tests require Docker to be running.
+
+### Run All Tests
+
+```bash
+npm run test:all
+```
