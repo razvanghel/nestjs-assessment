@@ -19,12 +19,11 @@ describe('Cocktails Integration Tests', () => {
 
   afterEach(async () => {
     await cocktailRepository.clear();
-    });
+  });
 
   afterAll(async () => {
     await TestTeardown.teardown(app, pgContainer, esContainer);
   });
-
 
   describe('GET /cocktails', () => {
     it('should return empty array when no cocktails exist', async () => {
@@ -42,7 +41,6 @@ describe('Cocktails Integration Tests', () => {
       expect(res.body).toHaveLength(2);
     });
   });
-
 
   describe('POST /cocktails', () => {
     it('should create a cocktail and return it', async () => {
@@ -103,7 +101,6 @@ describe('Cocktails Integration Tests', () => {
     });
   });
 
-
   describe('GET /cocktails/:id', () => {
     it('should return a cocktail by id', async () => {
       const cocktail = await cocktailRepository.save({
@@ -112,9 +109,7 @@ describe('Cocktails Integration Tests', () => {
         price: 7,
       });
 
-      const res = await request(app.getHttpServer())
-        .get(`/cocktails/${cocktail.id}`)
-        .expect(200);
+      const res = await request(app.getHttpServer()).get(`/cocktails/${cocktail.id}`).expect(200);
 
       expect(res.body).toMatchObject({ title: 'Aperol Spritz', price: 7 });
     });
@@ -123,7 +118,6 @@ describe('Cocktails Integration Tests', () => {
       await request(app.getHttpServer()).get('/cocktails/99999').expect(404);
     });
   });
-
 
   describe('PUT /cocktails/:id', () => {
     it('should update a cocktail price', async () => {
@@ -142,10 +136,7 @@ describe('Cocktails Integration Tests', () => {
     });
 
     it('should return 404 for non-existent id', async () => {
-      await request(app.getHttpServer())
-        .put('/cocktails/99999')
-        .send({ price: 15 })
-        .expect(404);
+      await request(app.getHttpServer()).put('/cocktails/99999').send({ price: 15 }).expect(404);
     });
 
     it('should return 409 when updating to an existing title', async () => {
@@ -183,7 +174,6 @@ describe('Cocktails Integration Tests', () => {
     });
   });
 
-
   describe('DELETE /cocktails/:id', () => {
     it('should delete a cocktail', async () => {
       const cocktail = await cocktailRepository.save({
@@ -198,16 +188,13 @@ describe('Cocktails Integration Tests', () => {
 
       expect(res.body).toEqual({ message: 'Cocktail deleted successfully' });
 
-      await request(app.getHttpServer())
-        .get(`/cocktails/${cocktail.id}`)
-        .expect(404);
+      await request(app.getHttpServer()).get(`/cocktails/${cocktail.id}`).expect(404);
     });
 
     it('should return 404 for non-existent id', async () => {
       await request(app.getHttpServer()).delete('/cocktails/99999').expect(404);
     });
   });
-
 
   describe('GET /cocktails/search', () => {
     it('should return all cocktails when query is empty', async () => {
@@ -216,9 +203,7 @@ describe('Cocktails Integration Tests', () => {
         { title: 'Mojito', description: 'A refreshing mint cocktail', price: 8 },
       ]);
 
-      const res = await request(app.getHttpServer())
-        .get('/cocktails/search?q=')
-        .expect(200);
+      const res = await request(app.getHttpServer()).get('/cocktails/search?q=').expect(200);
 
       expect(res.body.length).toBe(2);
     });
@@ -226,13 +211,15 @@ describe('Cocktails Integration Tests', () => {
     it('should return matching results from Elasticsearch', async () => {
       await request(app.getHttpServer())
         .post('/cocktails')
-        .send({ title: 'Pina Colada', description: 'A tropical pineapple coconut cocktail', price: 8 });
+        .send({
+          title: 'Pina Colada',
+          description: 'A tropical pineapple coconut cocktail',
+          price: 8,
+        });
 
       await new Promise((r) => setTimeout(r, 2000));
 
-      const res = await request(app.getHttpServer())
-        .get('/cocktails/search?q=pina')
-        .expect(200);
+      const res = await request(app.getHttpServer()).get('/cocktails/search?q=pina').expect(200);
 
       expect(res.body.some((c: any) => c.title === 'Pina Colada')).toBe(true);
     });

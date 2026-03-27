@@ -3,7 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import { ElasticsearchContainer, StartedElasticsearchContainer } from '@testcontainers/elasticsearch';
+import {
+  ElasticsearchContainer,
+  StartedElasticsearchContainer,
+} from '@testcontainers/elasticsearch';
 import { HttpExceptionFilter } from '../../common/filters/http-exceptions.filters';
 import { DataSource } from 'typeorm';
 import { CocktailsModule } from '../../cocktails/cocktails.module';
@@ -24,15 +27,15 @@ export class TestSetup {
         .withUsername('testuser')
         .withPassword('testpass')
         .start(),
-      new ElasticsearchContainer(
-        'docker.elastic.co/elasticsearch/elasticsearch:8.6.0',
-      ).withEnvironment({
-        'discovery.type': 'single-node',
-        'xpack.security.enabled': 'false',
-        'xpack.security.http.ssl.enabled': 'false',
-        'xpack.security.enrollment.enabled': 'false',
-        'ES_JAVA_OPTS': '-Xms512m -Xmx512m',
-      }).start(),
+      new ElasticsearchContainer('docker.elastic.co/elasticsearch/elasticsearch:8.6.0')
+        .withEnvironment({
+          'discovery.type': 'single-node',
+          'xpack.security.enabled': 'false',
+          'xpack.security.http.ssl.enabled': 'false',
+          'xpack.security.enrollment.enabled': 'false',
+          ES_JAVA_OPTS: '-Xms512m -Xmx512m',
+        })
+        .start(),
     ]);
     process.env.ELASTICSEARCH_NODE = esContainer.getHttpUrl();
 
