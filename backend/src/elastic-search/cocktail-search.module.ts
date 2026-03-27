@@ -4,8 +4,10 @@ import { CocktailsSearchService } from './cocktails-search.service';
 
 @Module({
   imports: [
-    ElasticsearchModule.register({
-      node: 'http://elasticsearch:9200',
+    ElasticsearchModule.registerAsync({
+      useFactory: () => ({
+        node: process.env.ELASTICSEARCH_NODE || 'http://elasticsearch:9200',
+      }),
     }),
   ],
   providers: [CocktailsSearchService],

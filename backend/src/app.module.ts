@@ -11,6 +11,7 @@ import { ElasticSearch } from './elasticsearch.service';
       type: 'postgres',
       logging: true,
       entities: [Cocktails],
+      synchronize: process.env.NODE_ENV === 'test',
     }),
     CocktailsModule,
   ],
